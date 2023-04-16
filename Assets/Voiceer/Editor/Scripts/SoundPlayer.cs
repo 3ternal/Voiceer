@@ -27,11 +27,16 @@ namespace Voiceer
             }
 　
             var unityEditorAssembly = typeof(AudioImporter).Assembly;
+
             var audioUtilClass = unityEditorAssembly.GetType("UnityEditor.AudioUtil");
+            //Debug.Log(audioUtilClass);
             
-            var method = audioUtilClass.GetMethod
+            //var methodTest = audioUtilClass.GetMethod("PlayPreviewClip");
+            //Debug.Log(methodTest);
+
+            var method = audioUtilClass.GetMethod//
             (
-                "PlayClip",
+                "PlayPreviewClip",
                 BindingFlags.Static | BindingFlags.Public,
                 null,
 #if UNITY_2019_2_OR_NEWER
@@ -42,7 +47,14 @@ namespace Voiceer
                 null
             );
 
+            if (method == null)
+            {
+                Debug.LogError("Method is null!");
+            }
+
 #if UNITY_2019_2_OR_NEWER
+            //Debug.Log(clip);
+            //Debug.Log(method);
             method.Invoke(null, new object[] { clip, 0, false });
 #else
             method.Invoke(null, new object[] {clip});
