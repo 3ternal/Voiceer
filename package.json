@@ -1,32 +1,19 @@
-# The package name
-name: com.negipoyoc.voiceer
-# The package display name
-displayName: Voiceer
-# The short package description
-description: A package to connect audio clips to Unity editor events.
-# The repository url
-repoUrl: 'https://github.com/3ternal/Voiceer'
-# The forked repository url
-parentRepoUrl: 'https://github.com/negipoyoc/Voiceer'
-# The Software Package Data Exchange® (SPDX®) license id
-licenseSpdxId: MIT
-# The license name
-licenseName: MIT License
-# A list of topic slugs
-topics:
-  - utilities
-# Filtering Git tags based on their prefix. It’s particularly useful for monorepos to distinguish between Git tags. i.e. 'com.example.foo/'.
-gitTagPrefix: ''
-# The regular expression that specifies intentionally untracked Git tags that should be ignored
-gitTagIgnore: '-master$'
-# The minimal version to build. Leave it blank to build all versions.
-#minVersion: '1.0.5'
-# The featured image URL. It should point to a valid image URL instead of a web page that presents the image.
-# Leave it blank to use the repository’s social image if it exists.
-image: 'https://user-images.githubusercontent.com/31283418/72233590-93c62d00-360b-11ea-91c4-f81e59e6f610.png'
-# The featured image fit mode: cover (default) or contain. Learn more at https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit
-imageFit: cover
-# The README.md file path (branchname:filename)
-readme: 'master:README.md'
-# The package hunter's GitHub username
-hunter: author
+{
+  "name": "com.negipoyoc.voiceer",
+  "displayName": "Voiceer",
+  "description": "A package to connect audio clips to Unity editor events.",
+  "keywords": [
+    "Audio",
+    "Editor",
+    "Utility",
+    "Anime",
+    "Japanese"
+  ],
+  "category": "Utility",
+  "version": "1.2",
+  "unity": "2021.3",
+  "dependencies": {},
+  "publishConfig": {
+    "registry": "https://package.openupm.com"
+  }
+}
