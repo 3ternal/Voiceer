@@ -73,12 +73,12 @@ You will return to Preset Selection Mode, and the editing window will be reset.
 
 ## About Voice Files
 * The voice files are located in "Assets/Voiceer/VoiceResources/\<Preset Name\>". Feel free to use them.
-* wav files are recommended.
+* .wav files are recommended.
 
 # Operating Environment
 Confirmed: Unity 2018-2021
 
-Will most likely work on later versions as well.
+Later versions are expected to work as well.
 
 -----------------------------------
 
