@@ -18,9 +18,9 @@
   },
   "samples": [
         {
-            "displayName": "Voiceer",
+            "displayName": "ScriptableObjects for Assets folder (Required)",
             "description": "Contains mutable assets required for Voiceer to work",
-            "path": "Plugins/Voiceer"
+            "path": "Required Assets/ScriptableObject"
         }
     ]
 }
