@@ -126,23 +126,25 @@ namespace Voiceer
             switch (trigger)
             {
                 case Hook.OnCompileEnd:
-                    return "コンパイルが終了した時";
+                    return "コンパイルが終了した時 (on finished compiling)";
                 case Hook.OnEnteredPlayMode:
-                    return "正常に再生できた時";
+                    return "正常に再生できた時 (on enter play mode)";
                 case Hook.OnExitingPlayMode:
-                    return "再生モードを終了した時";
+                    return "再生モードを終了した時 (on exit play mode)";
                 case Hook.OnPlayButHasError:
-                    return "再生しようとしたがエラーがあって再生できなかった時";
+                    return "再生しようとしたがエラーがあって再生できなかった時 (if you attempt to enter play mode with an error present)";
                 case Hook.OnPreProcessBuild:
-                    return "ビルドプロセスに入る直前";
+                    return "ビルドプロセスに入る直前 (on pre-process build)";
                 case Hook.OnPostProcessBuildSuccess:
-                    return "正常にビルドが完了した時";
+                    return "正常にビルドが完了した時 (on post-process build)";
                 case Hook.OnPostProcessBuildFailed:
-                    return "ビルドが失敗した時";
+                    return "ビルドが失敗した時 (on build fail)";
                 case Hook.OnSave:
-                    return "プロジェクトをセーブした時";
+                    return "プロジェクトをセーブした時 (on save)";
                 case Hook.OnBuildTargetChanged:
-                    return "ビルドターゲットを変更した時";
+                    return "ビルドターゲットを変更した時 (on build target changed)";
+                case Hook.OnError:
+                    return "ビルドターゲットを変更した時 (on error)";
                 default:
                     //上記で未定義なTriggerはそのまま出力
                     return trigger.ToString();

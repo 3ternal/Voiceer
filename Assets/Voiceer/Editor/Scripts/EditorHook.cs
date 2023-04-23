@@ -4,7 +4,6 @@ using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEditor.SceneManagement;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace Voiceer
 {
@@ -13,6 +12,8 @@ namespace Voiceer
         [InitializeOnLoadMethod]
         private static void InitializeEditorHookMethods()
         {
+            Application.logMessageReceived += ReceiveLogMessage;
+
             //PlayModeが変わった時
             //シーン再生を開始した時
             //シーン再生を止めた時
@@ -118,6 +119,14 @@ namespace Voiceer
             public void OnActiveBuildTargetChanged(BuildTarget previousTarget, BuildTarget newTarget)
             {
                 SoundPlayer.PlaySound(Hook.OnBuildTargetChanged);
+            }
+        }
+
+        static void ReceiveLogMessage(string condition, string stackTrace, LogType type)
+        {
+            if (type == LogType.Error || type == LogType.Exception || type == LogType.Assert)
+            {
+                SoundPlayer.PlaySound(Hook.OnError);
             }
         }
     }

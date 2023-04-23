@@ -52,6 +52,10 @@ MonoBehaviour:
     sound:
       voiceClips:
       - {fileID: 8300000, guid: 3c9036e50857a0841b8d7e5559eea263, type: 3}
+  - trigger: 9
+    sound:
+      voiceClips:
+      - {fileID: 8300000, guid: 0963ff08eca225642a4a84594e758080, type: 3}
   metaData:
     memo: "\u7D50\u76EE\u30E6\u30A4\u3061\u3083\u3093\u306EFanbox\u9650\u5B9A\u30D5\u30EB\u30DC\u30A4\u30B9\u306A\u30DC\u30A4\u30B9Preset\u3067\u3059\u3002"
     url: https://twitter.com/musubimeyui

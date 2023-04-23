@@ -9,6 +9,8 @@ namespace Voiceer
 {
     public static class SoundPlayer
     {
+        const bool logDebug = false;
+
         private static VoicePreset CurrentVoicePreset => VoiceerEditorUtility.GetStorageSelector()?.CurrentVoicePreset;
 
         public static void PlaySound(Hook hook)
@@ -16,6 +18,9 @@ namespace Voiceer
             //VoicePresetがあるか
             if (CurrentVoicePreset == null)
             {
+                if (logDebug)
+                    Debug.Log("Current Voice Preset was null");
+
                 return;
             }
 
@@ -23,16 +28,18 @@ namespace Voiceer
             var clip = CurrentVoicePreset.GetRandomClip(hook);
             if (clip == null)
             {
+                if (logDebug)
+                    Debug.Log("Couldn't find a voice clip for " + hook);
+
                 return;
             }
-　
+
+            if (logDebug)
+                Debug.Log("Attempting to play a sound for " + hook + "\nClip name: " + clip.name + "\n");
+
             var unityEditorAssembly = typeof(AudioImporter).Assembly;
 
             var audioUtilClass = unityEditorAssembly.GetType("UnityEditor.AudioUtil");
-            //Debug.Log(audioUtilClass);
-            
-            //var methodTest = audioUtilClass.GetMethod("PlayPreviewClip");
-            //Debug.Log(methodTest);
 
             var method = audioUtilClass.GetMethod//
             (
@@ -59,8 +66,6 @@ namespace Voiceer
 #else
             method.Invoke(null, new object[] {clip});
 #endif
-            
-            
             
         }
     }

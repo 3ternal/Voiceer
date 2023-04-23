@@ -16,6 +16,7 @@ namespace Voiceer
         OnPostProcessBuildFailed,
         OnSave,
         OnBuildTargetChanged,
+        OnError
     }
 
     [Serializable]
