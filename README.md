@@ -1,5 +1,83 @@
 ![](https://user-images.githubusercontent.com/31283418/72233590-93c62d00-360b-11ea-91c4-f81e59e6f610.png)
 # Voiceer
+Voice + Cheer = Voiceer!
+
+This Unity editor extension will play a pre-recorded voice whenever you...
+* Save
+* Enter Play Mode
+* Exit Play Mode
+* Complete a build
+* And more!
+
+Demo video:
+https://twitter.com/CST_negi/status/1214500926326628352
+
+Developed in cooperation with: [Musubime Yui](https://twitter.com/musubimeyui)
+
+## Install Instructions
+1. In Unity, navigate to the Package Manager
+2. Click the plus button in the top-left corner
+3. Click "add package from git URL"
+
+Alternate option: Install from [OpenUPM](https://openupm.com/packages/com.negipoyoc.voiceer/)
+
+## How to change the voice preset
+1. Navigate to Window -> Voiceer -> Voice Preset Selector.
+![](https://user-images.githubusercontent.com/31283418/72231862-08e03500-3601-11ea-9a1b-f9eadd6d99a7.png)
+
+2. Click the button circled in red and select your desired preset.
+![](https://user-images.githubusercontent.com/31283418/72231936-7ee49c00-3601-11ea-9c0b-b7da798ce87d.png)
+
+3. That is all.
+
+## How to generate your own voice preset
+Navigate to Window -> Voiceer -> Voice Preset Generator.
+![](https://user-images.githubusercontent.com/31283418/72231861-08479e80-3601-11ea-80f7-62ec8d60b182.png)
+
+Here, you can either load an existing preset from a file, or create a new one.
+![](https://user-images.githubusercontent.com/31283418/72231859-08479e80-3601-11ea-916c-b9ea6f917a88.png)
+
+### Creating a new preset
+1. Click on "create a new preset" (新規作成).
+
+2. Open the window.
+
+![New](https://user-images.githubusercontent.com/31283418/72231860-08479e80-3601-11ea-84d3-d92deb58e24e.png)
+
+3. By clicking the plus (+) or minus (-) buttons, you can add or remove voice clips to a particular event.
+
+![](https://user-images.githubusercontent.com/31283418/72231986-bd7a5680-3601-11ea-8f46-fec58664c17f.png)
+
+4. That's all (note: your changes will be auto-saved)
+
+### Load an existing preset
+1. Click on the circle at the top and select a preset.
+
+2. Just as when creating a new preset, you can use the plus (+) or minus (-) buttons to add or remove voice clips to a particular event.
+
+3. That's all (note: your changes will be auto-saved)
+
+## Misc
+### Return to Preset Selection Mode
+You will return to Preset Selection Mode, and the editing window will be reinitialized.
+
+# Voice Package Creation (for creators)
+1. Navigate to Window -> Voiceer -> Voice Preset Generator.
+2. Select your preset.
+3. Click on the "Create Package" button at the very bottom (パッケージを出力する).
+4. That's all.
+
+## About Voice Files
+* The voice files are located in "Assets/Voiceer/VoiceResources/<Preset Name>". Feel free to use them.
+* wav files are recommended.
+
+# Operating Environment
+Confirmed: Unity 2018-2021
+Will most likely work on later versions as well.
+
+-----------------------------------
+
+# Voiceer
 Voice+Cheer=Voiceer(ぼいしあ)
 
 Unityで
@@ -70,5 +148,5 @@ Presetの選択モードに戻ります。(編集画面が初期化されます�
 * wavファイルを推奨しています。
 
 # 動作環境
-Unity2018.4 2019.1 2019.2 2019.3
+Unity2018.4 2019.1 2019.2 2019.3, 2020, 2021
 で動作することを確認しています。
