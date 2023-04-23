@@ -15,5 +15,12 @@
   "dependencies": {},
   "publishConfig": {
     "registry": "https://package.openupm.com"
-  }
+  },
+  "samples": [
+        {
+            "displayName": "Voiceer",
+            "description": "Contains mutable assets required for Voiceer to work",
+            "path": "Plugins/Voiceer"
+        }
+    ]
 }

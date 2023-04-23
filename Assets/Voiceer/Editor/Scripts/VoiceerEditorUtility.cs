@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEditor;
-using UnityEditor.VersionControl;
 
 namespace Voiceer
 {
