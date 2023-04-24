@@ -10,27 +10,23 @@ namespace Voiceer
 {
     public class EditorHook
     {
-        static bool logDebug = false;
+        static bool logDebug = true;
 
         private const string pluginsPath = "Assets/Plugins/Voiceer";
         private readonly static string voiceSelectorFullPath = pluginsPath + "/VoicePresetSelector.asset";
         private readonly static string musubimeYuiFullPath = pluginsPath + "/Voices/MusubimeYui.asset";
-
-        private static VoicePreset defaultVoicePreset = null;
 
         static float timeOfLastError;
 
         [InitializeOnLoadMethod]
         private static void CreateVoicePresetSelector()
         {
-            bool yuiVoiceExists = File.Exists(musubimeYuiFullPath);
             bool voiceSelectorExists = File.Exists(voiceSelectorFullPath);
 
             if (logDebug)
             {
                 Debug.Log("Current Voice Preset exists? " + SoundPlayer.CurrentVoicePreset + "\n" +
                     "VoicePresetSelector exists? " + voiceSelectorExists + "\n" +
-                    "Musubime Yui's VoicePreset exists? " + yuiVoiceExists + "\n" +
                     "VoicePresetSelector default path: " + voiceSelectorFullPath + "\n");
             }
 
@@ -48,12 +44,6 @@ namespace Voiceer
                 Directory.CreateDirectory("Assets/Plugins/Voiceer/Voices");
             }
 
-            //if MusubimeYui exists, she should be considered the default voice
-            if (yuiVoiceExists)
-            {
-                defaultVoicePreset = AssetDatabase.LoadAssetAtPath<VoicePreset>(musubimeYuiFullPath);
-            }
-
             //create a VoicePresetSelector if necessary
             //this will probably only happen right after installing the package
             if (!SoundPlayer.CurrentVoicePreset && !voiceSelectorExists)
@@ -64,13 +54,47 @@ namespace Voiceer
                 VoicePresetSelector presetSelectorAsset = ScriptableObject.CreateInstance<VoicePresetSelector>();
                 AssetDatabase.CreateAsset(presetSelectorAsset, voiceSelectorFullPath);
 
-                //assign MusubimeYui as the default voice
-                if (defaultVoicePreset != null)
-                {
-                    if (logDebug)
-                        Debug.Log("Assigning " + defaultVoicePreset + " as our current VoicePreset\n");
+                //do some wizardry to determine if we're in the Package context or if we're in the Voiceer project
+                Assembly assembly = Assembly.GetExecutingAssembly();
+                UnityEditor.PackageManager.PackageInfo packageInfo = UnityEditor.PackageManager.PackageInfo.FindForAssembly(assembly);
+                bool isInPackageFolder = packageInfo != null;
 
-                    presetSelectorAsset.CurrentVoicePreset = defaultVoicePreset;
+                //if we're in the Package context, we need to do something confusing to get the mutable SOs into the user's Assets folder
+                if (isInPackageFolder)
+                {
+                    string yuiSourcePath = "Packages/com.negipoyoc.voiceer/Plugins/Voiceer/Voices/MusubimeYui.asset";
+
+                    //hang on, do we even have to copy the Yui asset? the user can copy it themselves if they want to
+                    //the only asset that needs to be mutable is the VoicePresetSelector
+                    //and then we can just assign the regular Yui asset from the Packages folder to it
+
+                    //copy the template yui from the Packages folder into the user's Assets folder
+                    //bool success = AssetDatabase.CopyAsset(yuiSourcePath, musubimeYuiFullPath);
+                    //if (!success)
+                    //{
+                    //    Debug.LogError("Copy failed");
+                    //}
+                    //else
+                    //{
+                    //    if (logDebug)
+                    //        Debug.Log("Copied from '" + yuiSourcePath + "'\nTo '" + musubimeYuiFullPath + "'\n");
+                    //}
+
+                    //remember to refresh the asset database after creating the copy
+                    //AssetDatabase.SaveAssets();
+                    //AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
+                    //AssetDatabase.ImportAsset(musubimeYuiFullPath);
+
+                    //load the voice preset
+                    VoicePreset yuiVoice = AssetDatabase.LoadAssetAtPath(yuiSourcePath/*musubimeYuiFullPath*/, typeof(VoicePreset)) as VoicePreset;
+                    if (yuiVoice == null)
+                        Debug.LogError("Couldn't find default voice");
+
+                    //assign MusubimeYui as the default voice
+                    if (logDebug)
+                        Debug.Log("Assigning " + yuiVoice + " as our current VoicePreset\n");
+
+                    presetSelectorAsset.CurrentVoicePreset = yuiVoice;
                 }
             }
         }
