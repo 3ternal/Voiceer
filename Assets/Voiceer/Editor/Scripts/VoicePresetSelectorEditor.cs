@@ -9,7 +9,7 @@ namespace Voiceer
     {
 
         private const string TitleString = "Voiceer - Voice Preset Selector";
-
+        
         private static VoicePresetSelector _selector = null;
         private static readonly string IsVolumeControlEnabledKey = "VoiceerIsVolumeControlEnabled";
         private static readonly string VolumeKey = "VoiceerVolume";

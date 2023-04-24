@@ -38,7 +38,7 @@ namespace Voiceer
             
             _loadedPreset.hideFlags = HideFlags.NotEditable;
             _loadedPreset.metaData.url = EditorGUILayout.TextField("URL:", _loadedPreset.metaData.url);
-            _loadedPreset.metaData.memo = EditorGUILayout.TextField("その他:", _loadedPreset.metaData.memo);
+            _loadedPreset.metaData.memo = EditorGUILayout.TextField("その他 (Other):", _loadedPreset.metaData.memo);
 
             GUILayout.Space(20);
 
@@ -98,12 +98,12 @@ namespace Voiceer
 
             GUILayout.Space(10);
             VoiceerEditorUtility.Hr(position.width);
-            if (GUILayout.Button("Preset選択モードに戻る"))
+            if (GUILayout.Button("Preset選択モードに戻る (Return to Preset Selection)"))
             {
                 _loadedPreset = null;
             }
             GUILayout.Space(10);
-            if (GUILayout.Button("パッケージを出力する"))
+            if (GUILayout.Button("パッケージを出力する (Export a unitypackage)"))
             {
                 VoiceerEditorUtility.ExportPackage(_loadedPreset);
             }
@@ -114,11 +114,11 @@ namespace Voiceer
         /// </summary>
         private void EditPresetHeader()
         {
-            EditorGUILayout.LabelField("各+ボタンを押して、任意のAudioClipを追加してください。", VoiceerEditorUtility.Bold);
-            EditorGUILayout.LabelField("(変更内容はオートセーブされます。)",VoiceerEditorUtility.Red);
+            EditorGUILayout.LabelField("各+ボタンを押して、任意のAudioClipを追加してください。(Press the plus button and select your desired AudioClip)", VoiceerEditorUtility.Bold);
+            EditorGUILayout.LabelField("(変更内容はオートセーブされます。) (Changes will be auto-saved)",VoiceerEditorUtility.Red);
             VoiceerEditorUtility.Hr(this.position.width);
             _loadedPreset =
-                (VoicePreset) EditorGUILayout.ObjectField("現在のPreset", _loadedPreset, typeof(VoicePreset), false);
+                (VoicePreset) EditorGUILayout.ObjectField("現在のPreset (Current Preset)", _loadedPreset, typeof(VoicePreset), false);
             GUILayout.Space(10);
         }
 
@@ -127,30 +127,30 @@ namespace Voiceer
         /// </summary>
         void LoadPresetHeader()
         {
-            EditorGUILayout.LabelField("VoicePresetをロード", VoiceerEditorUtility.Bold);
+            EditorGUILayout.LabelField("VoicePresetをロード (Load a VoicePreset)", VoiceerEditorUtility.Bold);
             EditorGUI.indentLevel++;
             {
                 _loadedPreset =
-                    (VoicePreset) EditorGUILayout.ObjectField("既存のPresetをロード", _loadedPreset, typeof(VoicePreset),
+                    (VoicePreset) EditorGUILayout.ObjectField("既存のPresetをロード (Load Existing Preset)", _loadedPreset, typeof(VoicePreset),
                         false);
             }
             EditorGUI.indentLevel--;
             VoiceerEditorUtility.Hr(position.width);
             GUILayout.Space(10);
-            EditorGUILayout.LabelField("または");
+            EditorGUILayout.LabelField("または (or)");
             GUILayout.Space(10);
             VoiceerEditorUtility.Hr(position.width);
-            EditorGUILayout.LabelField("VoicePresetの新規作成", VoiceerEditorUtility.Bold);
+            EditorGUILayout.LabelField("VoicePresetの新規作成 (Create a New Voice Preset)", VoiceerEditorUtility.Bold);
 
             EditorGUI.indentLevel++;
             {
-                _outputDirectory = EditorGUILayout.TextField("出力フォルダ:", _outputDirectory);
-                _presetName = EditorGUILayout.TextField("ファイル名:", _presetName);
+                _outputDirectory = EditorGUILayout.TextField("出力フォルダ (Output Folder):", _outputDirectory);
+                _presetName = EditorGUILayout.TextField("ファイル名 (Filename):", _presetName);
 
-                EditorGUILayout.LabelField("出力先：" + Path.Combine(_outputDirectory, _presetName + _outputSuffix),
+                EditorGUILayout.LabelField("出力先 (Output Path：" + Path.Combine(_outputDirectory, _presetName + _outputSuffix),
                     VoiceerEditorUtility.Bold);
 
-                if (GUILayout.Button("新規作成"))
+                if (GUILayout.Button("新規作成 (Create New Preset)"))
                 {
                     var exportedPath = CreateNewPreset();
                     _loadedPreset = AssetDatabase.LoadAssetAtPath(exportedPath, typeof(VoicePreset)) as VoicePreset;
@@ -167,7 +167,7 @@ namespace Voiceer
         /// <returns></returns>
         private string CreateNewPreset()
         {
-           　VoiceerEditorUtility.SafeCreateDirectory(_outputDirectory);
+            VoiceerEditorUtility.SafeCreateDirectory(_outputDirectory);
             var createdObject = CreateInstance(nameof(VoicePreset));
             var outputPath = Path.Combine(_outputDirectory, _presetName + _outputSuffix);
             var uniqueOutputPath = AssetDatabase.GenerateUniqueAssetPath(outputPath);

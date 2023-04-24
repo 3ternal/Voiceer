@@ -11,7 +11,7 @@ namespace Voiceer
     {
         const bool logDebug = false;
 
-        private static VoicePreset CurrentVoicePreset => VoiceerEditorUtility.GetStorageSelector()?.CurrentVoicePreset;
+        public static VoicePreset CurrentVoicePreset => VoiceerEditorUtility.GetStorageSelector()?.CurrentVoicePreset;
 
         public static void PlaySound(Hook hook)
         {
@@ -86,6 +86,11 @@ namespace Voiceer
             return Mathf.Pow(10f, db/20f);
         }
 
+        /// <summary>
+        /// An alternate PlaySoundClip method that allows the user to change the clip's volume.
+        /// </summary>
+        /// <param name="clip"></param>
+        /// <param name="db"></param>
         private static void PlaySoundClipExperimental(AudioClip clip, float db)
         {
             var voiceerAudio = new GameObject("VoiceerAudio");

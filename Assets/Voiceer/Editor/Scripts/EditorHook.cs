@@ -4,11 +4,63 @@ using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using System.IO;
 
 namespace Voiceer
 {
     public class EditorHook
     {
+        static bool logDebug = false;
+
+        private const string pluginsPath = "Assets/Plugins/Voiceer";
+        private readonly static string voiceSelectorFullPath = pluginsPath + "/VoicePresetSelector.asset";
+        private readonly static string musubimeYuiFullPath = pluginsPath + "/Voices/MusubimeYui.asset";
+
+        private static VoicePreset defaultVoicePreset = null;
+
+        static float timeOfLastError;
+
+        [InitializeOnLoadMethod]
+        private static void CreateVoicePresetSelector()
+        {
+            bool yuiVoiceExists = File.Exists(musubimeYuiFullPath);
+            bool voiceSelectorExists = File.Exists(voiceSelectorFullPath);
+
+            if (logDebug)
+            {
+                Debug.Log("Current Voice Preset exists? " + SoundPlayer.CurrentVoicePreset + "\n" +
+                    "VoicePresetSelector exists? " + voiceSelectorExists + "\n" +
+                    "Musubime Yui's VoicePreset exists? " + yuiVoiceExists + "\n" +
+                    "VoicePresetSelector default path: " + voiceSelectorFullPath + "\n");
+            }
+
+            //if MusubimeYui exists, she should be considered the default voice
+            if (yuiVoiceExists)
+            {
+                defaultVoicePreset = AssetDatabase.LoadAssetAtPath<VoicePreset>(musubimeYuiFullPath);
+            }
+
+            //create a VoicePresetSelector if necessary
+            //this will probably only happen right after installing the package
+            if (!SoundPlayer.CurrentVoicePreset && !voiceSelectorExists)
+            {
+                if (logDebug)
+                    Debug.Log("Creating a VoicePresetSelector asset\n");
+
+                VoicePresetSelector presetSelectorAsset = ScriptableObject.CreateInstance<VoicePresetSelector>();
+                AssetDatabase.CreateAsset(presetSelectorAsset, voiceSelectorFullPath);
+
+                //assign MusubimeYui as the default voice
+                if (defaultVoicePreset != null)
+                {
+                    if (logDebug)
+                        Debug.Log("Assigning " + defaultVoicePreset + " as our current VoicePreset\n");
+
+                    presetSelectorAsset.CurrentVoicePreset = defaultVoicePreset;
+                }
+            }
+        }
+
         [InitializeOnLoadMethod]
         private static void InitializeEditorHookMethods()
         {
@@ -126,7 +178,12 @@ namespace Voiceer
         {
             if (type == LogType.Error || type == LogType.Exception || type == LogType.Assert)
             {
-                SoundPlayer.PlaySound(Hook.OnError);
+                if (!Mathf.Approximately(timeOfLastError, Time.realtimeSinceStartup))
+                {
+                    SoundPlayer.PlaySound(Hook.OnError);
+                }
+
+                timeOfLastError = Time.realtimeSinceStartup;
             }
         }
     }

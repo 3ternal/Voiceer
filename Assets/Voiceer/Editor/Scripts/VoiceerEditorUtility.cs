@@ -151,7 +151,8 @@ namespace Voiceer
         }
 
         /// <summary>
-        /// 直接パス指定で開いてダメなら検索して開く
+        /// 直接パス指定で開いてダメなら検索して開く<br></br>
+        /// Opens the file at a specific path or by searching for t:VoicePresetSelector.
         /// </summary>
         /// <returns></returns>
         public static VoicePresetSelector GetStorageSelector()
