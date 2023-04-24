@@ -34,6 +34,20 @@ namespace Voiceer
                     "VoicePresetSelector default path: " + voiceSelectorFullPath + "\n");
             }
 
+            //make sure the folders exist
+            if (!Directory.Exists("Assets/Plugins"))
+            {
+                Directory.CreateDirectory("Assets/Plugins");
+            }
+            if (!Directory.Exists("Assets/Plugins/Voiceer"))
+            {
+                Directory.CreateDirectory("Assets/Plugins/Voiceer");
+            }
+            if (!Directory.Exists("Assets/Plugins/Voiceer/Voices"))
+            {
+                Directory.CreateDirectory("Assets/Plugins/Voiceer/Voices");
+            }
+
             //if MusubimeYui exists, she should be considered the default voice
             if (yuiVoiceExists)
             {
