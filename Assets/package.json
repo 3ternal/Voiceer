@@ -10,17 +10,10 @@
     "Japanese"
   ],
   "category": "Utility",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "unity": "2021.3",
   "dependencies": {},
   "publishConfig": {
     "registry": "https://package.openupm.com"
   },
-  "samples": [
-        {
-            "displayName": "ScriptableObjects for Assets folder (Required)",
-            "description": "Contains mutable assets required for Voiceer to work",
-            "path": "Required Assets/ScriptableObject"
-        }
-    ]
 }
