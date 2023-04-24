@@ -161,7 +161,7 @@ namespace Voiceer
                 "Assets/Voiceer/ScriptableObject/VoicePresetSeledctor.asset");
             if (selector == null)
             {
-                var guid = AssetDatabase.FindAssets($"t:VoicePresetSelector").FirstOrDefault();
+                var guid = AssetDatabase.FindAssets($"t:VoicePresetSelector", new string[1] {"Assets"}).FirstOrDefault();
                 var path = AssetDatabase.GUIDToAssetPath(guid);
                 selector = AssetDatabase.LoadAssetAtPath<VoicePresetSelector>(path);
             }

@@ -12,6 +12,7 @@ namespace Voiceer
         const bool logDebug = false;
 
         public static VoicePreset CurrentVoicePreset => VoiceerEditorUtility.GetStorageSelector()?.CurrentVoicePreset;
+        public static bool VoiceSelectorExists => VoiceerEditorUtility.GetStorageSelector() != null;
 
         public static void PlaySound(Hook hook)
         {

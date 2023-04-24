@@ -10,49 +10,34 @@ namespace Voiceer
 {
     public class EditorHook
     {
-        static bool logDebug = true;
+        static bool logDebug = false;
+
+        private const string yuiSourcePath = "Packages/com.negipoyoc.voiceer/Voiceer/ScriptableObjects/MusubimeYui.asset";
+        private const string voiceSelectorSourcePath = "Packages/com.negipoyoc.voiceer/Voiceer/ScriptableObjects/VoicePresetSelector.asset";
 
         private const string pluginsPath = "Assets/Plugins/Voiceer";
-        private readonly static string voiceSelectorFullPath = pluginsPath + "/VoicePresetSelector.asset";
-        private readonly static string musubimeYuiFullPath = pluginsPath + "/Voices/MusubimeYui.asset";
+        private readonly static string voiceSelectorTargetPath = pluginsPath + "/VoicePresetSelector.asset";
 
         static float timeOfLastError;
 
         [InitializeOnLoadMethod]
         private static void CreateVoicePresetSelector()
         {
-            bool voiceSelectorExists = File.Exists(voiceSelectorFullPath);
+            bool voiceSelectorExists = File.Exists(voiceSelectorTargetPath);
 
             if (logDebug)
             {
                 Debug.Log("Current Voice Preset exists? " + SoundPlayer.CurrentVoicePreset + "\n" +
                     "VoicePresetSelector exists? " + voiceSelectorExists + "\n" +
-                    "VoicePresetSelector default path: " + voiceSelectorFullPath + "\n");
-            }
-
-            //make sure the folders exist
-            if (!Directory.Exists("Assets/Plugins"))
-            {
-                Directory.CreateDirectory("Assets/Plugins");
-            }
-            if (!Directory.Exists("Assets/Plugins/Voiceer"))
-            {
-                Directory.CreateDirectory("Assets/Plugins/Voiceer");
-            }
-            if (!Directory.Exists("Assets/Plugins/Voiceer/Voices"))
-            {
-                Directory.CreateDirectory("Assets/Plugins/Voiceer/Voices");
+                    "VoicePresetSelector default path: " + voiceSelectorTargetPath + "\n");
             }
 
             //create a VoicePresetSelector if necessary
             //this will probably only happen right after installing the package
-            if (!SoundPlayer.CurrentVoicePreset && !voiceSelectorExists)
+            if (!SoundPlayer.VoiceSelectorExists)
             {
                 if (logDebug)
                     Debug.Log("Creating a VoicePresetSelector asset\n");
-
-                VoicePresetSelector presetSelectorAsset = ScriptableObject.CreateInstance<VoicePresetSelector>();
-                AssetDatabase.CreateAsset(presetSelectorAsset, voiceSelectorFullPath);
 
                 //do some wizardry to determine if we're in the Package context or if we're in the Voiceer project
                 Assembly assembly = Assembly.GetExecutingAssembly();
@@ -62,39 +47,30 @@ namespace Voiceer
                 //if we're in the Package context, we need to do something confusing to get the mutable SOs into the user's Assets folder
                 if (isInPackageFolder)
                 {
-                    string yuiSourcePath = "Packages/com.negipoyoc.voiceer/Plugins/Voiceer/Voices/MusubimeYui.asset";
+                    //make sure the folders exist
+                    if (!Directory.Exists("Assets/Plugins"))
+                        Directory.CreateDirectory("Assets/Plugins");
 
-                    //hang on, do we even have to copy the Yui asset? the user can copy it themselves if they want to
-                    //the only asset that needs to be mutable is the VoicePresetSelector
-                    //and then we can just assign the regular Yui asset from the Packages folder to it
+                    if (!Directory.Exists("Assets/Plugins/Voiceer"))
+                        Directory.CreateDirectory("Assets/Plugins/Voiceer");
 
-                    //copy the template yui from the Packages folder into the user's Assets folder
-                    //bool success = AssetDatabase.CopyAsset(yuiSourcePath, musubimeYuiFullPath);
-                    //if (!success)
-                    //{
-                    //    Debug.LogError("Copy failed");
-                    //}
-                    //else
-                    //{
-                    //    if (logDebug)
-                    //        Debug.Log("Copied from '" + yuiSourcePath + "'\nTo '" + musubimeYuiFullPath + "'\n");
-                    //}
+                    if (!Directory.Exists("Assets/Plugins/Voiceer/Voices"))
+                        Directory.CreateDirectory("Assets/Plugins/Voiceer/Voices");
 
-                    //remember to refresh the asset database after creating the copy
-                    //AssetDatabase.SaveAssets();
-                    //AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
-                    //AssetDatabase.ImportAsset(musubimeYuiFullPath);
+                    bool success = AssetDatabase.CopyAsset(voiceSelectorSourcePath, voiceSelectorTargetPath);
+                    if (!success)
+                    {
+                        Debug.LogError("Copy failed\nSource path: " + voiceSelectorSourcePath + "\nTarget path: " + voiceSelectorTargetPath + "\n" +
+                            "Source exists? " + File.Exists(voiceSelectorSourcePath));
+                    }
+                    else
+                    {
+                        if (logDebug)
+                            Debug.Log("Copied from '" + voiceSelectorSourcePath + "'\nTo '" + voiceSelectorTargetPath + "'\n");
+                    }
 
-                    //load the voice preset
-                    VoicePreset yuiVoice = AssetDatabase.LoadAssetAtPath(yuiSourcePath/*musubimeYuiFullPath*/, typeof(VoicePreset)) as VoicePreset;
-                    if (yuiVoice == null)
-                        Debug.LogError("Couldn't find default voice");
-
-                    //assign MusubimeYui as the default voice
-                    if (logDebug)
-                        Debug.Log("Assigning " + yuiVoice + " as our current VoicePreset\n");
-
-                    presetSelectorAsset.CurrentVoicePreset = yuiVoice;
+                    //we were originally going to copy the yui asset to the player's Plugins folder, but I guess there's no need
+                    //the only asset that really needs to be mutable is the VoicePresetSelector
                 }
             }
         }
