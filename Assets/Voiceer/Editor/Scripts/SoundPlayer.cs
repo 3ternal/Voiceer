@@ -111,6 +111,9 @@ namespace Voiceer
             audioSource.clip = adjustedClip;
             audioSource.Play();
 
+            if (LogDebug)
+                Debug.Log("Playing AudioSource\nSamples have been adjusted to volume " + volume + "\nClip is " + audioSource.clip.name + "\n", audioSource);
+
             //this callback will destroy the new AudioSource once it's done playing
             EditorApplication.CallbackFunction removeOnPlayed = null;
             removeOnPlayed = () =>
