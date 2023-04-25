@@ -147,7 +147,7 @@ namespace Voiceer
                 _outputDirectory = EditorGUILayout.TextField("出力フォルダ (Output Folder):", _outputDirectory);
                 _presetName = EditorGUILayout.TextField("ファイル名 (Filename):", _presetName);
 
-                EditorGUILayout.LabelField("出力先 (Output Path：" + Path.Combine(_outputDirectory, _presetName + _outputSuffix),
+                EditorGUILayout.LabelField("出力先 (Output Path)：" + Path.Combine(_outputDirectory, _presetName + _outputSuffix),
                     VoiceerEditorUtility.Bold);
 
                 if (GUILayout.Button("新規作成 (Create New Preset)"))

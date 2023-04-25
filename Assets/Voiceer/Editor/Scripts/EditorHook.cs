@@ -21,7 +21,7 @@ namespace Voiceer
         static float timeOfLastError;
         static float timeOfExitPlayMode;
 
-        static PlayModeStateChange playModeState;
+        public static PlayModeStateChange playModeState { get; private set; }
 
         public static bool IsInPackageFolder()
         {
@@ -102,8 +102,6 @@ namespace Voiceer
                 if (LogDebug)
                     Debug.Log("New play mode state: " + mode + "\n");
 
-                playModeState = mode;
-
                 //再生ボタンを押した時であること
                 //if (!EditorApplication.isPlayingOrWillChangePlaymode
                 //    && EditorApplication.isPlaying)
@@ -146,6 +144,8 @@ namespace Voiceer
 
         static void OnPlayModeStateChanged(PlayModeStateChange mode)
         {
+            playModeState = mode;
+
             switch (mode)
             {
                 case PlayModeStateChange.EnteredPlayMode:

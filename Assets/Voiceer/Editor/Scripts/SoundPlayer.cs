@@ -111,15 +111,25 @@ namespace Voiceer
             audioSource.clip = adjustedClip;
             audioSource.Play();
 
+            //this callback will destroy the new AudioSource once it's done playing
             EditorApplication.CallbackFunction removeOnPlayed = null;
             removeOnPlayed = () =>
             {
-                if(!audioSource.isPlaying) {
-                    EditorApplication.update -= removeOnPlayed;
-                    UnityEngine.Object.DestroyImmediate(voiceerAudio);
+                if (!audioSource.isPlaying)
+                {
+                    if (EditorHook.playModeState != PlayModeStateChange.ExitingEditMode &&
+                        EditorHook.playModeState != PlayModeStateChange.ExitingPlayMode)
+                    {
+                        if (LogDebug)
+                            Debug.Log("Removing audio source because it's no longer playing\nPlay mode state: " + EditorHook.playModeState + "\n");
+
+                        EditorApplication.update -= removeOnPlayed;
+                        UnityEngine.Object.DestroyImmediate(voiceerAudio);
+                    }
                 }
             };
 
+            //assign the callback to editor update
             EditorApplication.update += removeOnPlayed;
         }
     }
