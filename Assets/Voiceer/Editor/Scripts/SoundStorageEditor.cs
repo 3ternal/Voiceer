@@ -18,7 +18,7 @@ namespace Voiceer
 
         private VoicePreset _loadedPreset;
 
-        [MenuItem("Window/Voiceer/Voice Preset Generator")]
+        [MenuItem("Window/Voiceer/Voice Preset Generator", priority = 101)]
         private static void Open()
         {
             DisplayWizard<SoundStorageEditor>("Voiceer");

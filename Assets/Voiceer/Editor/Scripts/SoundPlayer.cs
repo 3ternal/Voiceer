@@ -9,7 +9,7 @@ namespace Voiceer
 {
     public static class SoundPlayer
     {
-        static bool logDebug = false;
+        static bool LogDebug => SessionState.GetBool("SoundPlayer.logDebug", false);
 
         public static VoicePreset CurrentVoicePreset => VoiceerEditorUtility.GetStorageSelector()?.CurrentVoicePreset;
         public static bool VoiceSelectorExists => VoiceerEditorUtility.GetStorageSelector() != null;
@@ -19,7 +19,7 @@ namespace Voiceer
             //VoicePresetがあるか
             if (CurrentVoicePreset == null)
             {
-                if (logDebug)
+                if (LogDebug)
                     Debug.Log("Current Voice Preset was null");
 
                 return;
@@ -29,13 +29,13 @@ namespace Voiceer
             var clip = CurrentVoicePreset.GetRandomClip(hook);
             if (clip == null)
             {
-                if (logDebug)
+                if (LogDebug)
                     Debug.Log("Couldn't find a voice clip for " + hook);
 
                 return;
             }
 
-            if (logDebug)
+            if (LogDebug)
                 Debug.Log("Attempting to play a sound for " + hook + "\nClip name: " + clip.name + "\n");
 
             //ボリューム調整が有効か

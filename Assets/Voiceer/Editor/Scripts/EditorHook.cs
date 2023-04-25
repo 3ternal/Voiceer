@@ -10,7 +10,7 @@ namespace Voiceer
 {
     public class EditorHook
     {
-        static bool logDebug = false;
+        public static bool LogDebug => SessionState.GetBool("EditorHook.logDebug", false);
 
         private const string yuiSourcePath = "Packages/com.negipoyoc.voiceer/Voiceer/ScriptableObjects/MusubimeYui.asset";
         private const string voiceSelectorSourcePath = "Packages/com.negipoyoc.voiceer/Voiceer/ScriptableObjects/VoicePresetSelector.asset";
@@ -39,7 +39,7 @@ namespace Voiceer
 
             bool voiceSelectorExists = File.Exists(voiceSelectorTargetPath);
 
-            if (logDebug)
+            if (LogDebug)
             {
                 Debug.Log("Attempting to create a VoicePresetSelector, if necessary\n" +
                     "Current Voice Preset exists? " + SoundPlayer.CurrentVoicePreset + "\n" +
@@ -51,7 +51,7 @@ namespace Voiceer
             //this will probably only happen right after installing the package
             if (!SoundPlayer.VoiceSelectorExists)
             {
-                if (logDebug)
+                if (LogDebug)
                     Debug.Log("Creating a VoicePresetSelector asset\n");
 
                 //if we're in the Package context, we need to do something confusing to get the mutable SOs into the user's Assets folder
@@ -75,7 +75,7 @@ namespace Voiceer
                     }
                     else
                     {
-                        if (logDebug)
+                        if (LogDebug)
                             Debug.Log("Copied from '" + voiceSelectorSourcePath + "'\nTo '" + voiceSelectorTargetPath + "'\n");
                     }
 
@@ -88,15 +88,18 @@ namespace Voiceer
         [InitializeOnLoadMethod]
         private static void InitializeEditorHookMethods()
         {
-             if (logDebug)
+             if (LogDebug)
                 Debug.Log("InitializeEditorHookMethods\n");
+
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
 
             //PlayModeが変わった時
             //シーン再生を開始した時
             //シーン再生を止めた時
             EditorApplication.playModeStateChanged += (mode) =>
             {
-                if (logDebug)
+                if (LogDebug)
                     Debug.Log("New play mode state: " + mode + "\n");
 
                 playModeState = mode;
@@ -107,20 +110,18 @@ namespace Voiceer
                 //    return;
 
                 //SceneView が存在すること
-                if (SceneView.sceneViews.Count == 0)
-                    return;
+                //if (SceneView.sceneViews.Count == 0)
+                //    return;
 
                 switch (mode)
                 {
                     //Playモードに入れた時
                     case PlayModeStateChange.EnteredPlayMode:
                         SoundPlayer.PlaySound(Hook.OnEnteredPlayMode);
-                        OnEnterPlayMode();
                         break;
                     //Playモードを終了した時
                     case PlayModeStateChange.EnteredEditMode:
                         SoundPlayer.PlaySound(Hook.OnExitingPlayMode);
-                        OnExitPlayMode();
                         break;
                 }
 
@@ -143,9 +144,22 @@ namespace Voiceer
             EditorSceneManager.sceneSaved += (scene) => { SoundPlayer.PlaySound(Hook.OnSave); };
         }
 
+        static void OnPlayModeStateChanged(PlayModeStateChange mode)
+        {
+            switch (mode)
+            {
+                case PlayModeStateChange.EnteredPlayMode:
+                    OnEnterPlayMode();
+                    break;
+                case PlayModeStateChange.EnteredEditMode:
+                    OnExitPlayMode();
+                    break;
+            }
+        }
+
         static void OnEnterPlayMode()
         {
-            if (logDebug)
+            if (LogDebug)
                 Debug.Log("On enter play mode\nTime: " + Time.realtimeSinceStartup + "\n");
 
             //see this bug: https://issuetracker.unity3d.com/issues/application-dot-logmessagereceived-callbacks-are-cleared-when-exiting-play-mode
@@ -155,7 +169,7 @@ namespace Voiceer
 
         static void OnExitPlayMode()
         {
-            if (logDebug)
+            if (LogDebug)
                 Debug.Log("On exit play mode\nTime: " + Time.realtimeSinceStartup + "\n");
 
             timeOfExitPlayMode = Time.realtimeSinceStartup;
@@ -174,13 +188,13 @@ namespace Voiceer
         {
             static CompileFinishHook()
             {
-                if (logDebug)
+                if (LogDebug)
                     Debug.Log("On recompile or reload\nisPlayingOrWillChangePlaymode? " + EditorApplication.isPlayingOrWillChangePlaymode + "\n");
 
                 if (EditorApplication.isPlayingOrWillChangePlaymode)
                     return;
 
-                if (logDebug)
+                if (LogDebug)
                     Debug.Log("Registered CompileFinishHook" + "\n");
 
                 //I think this is sort of like yield return null
@@ -248,7 +262,7 @@ namespace Voiceer
         {
             if (type == LogType.Error || type == LogType.Exception || type == LogType.Assert)
             {
-                if (logDebug)
+                if (LogDebug)
                 {
                     Debug.Log("Received an error. Type: " + type + "\n" +
                         "Real time since startup: " + Time.realtimeSinceStartup + "\n" +

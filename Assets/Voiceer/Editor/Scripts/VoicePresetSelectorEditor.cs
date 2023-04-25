@@ -24,7 +24,7 @@ namespace Voiceer
             private set => EditorPrefs.SetFloat(VolumeKey, value);
         }
 
-        [MenuItem("Window/Voiceer/Voice Preset Selector")]
+        [MenuItem("Window/Voiceer/Voice Preset Selector", priority = 100)]
         private static void Open()
         {
             GetWindow<VoicePresetSelectorEditor>("Voiceer");
