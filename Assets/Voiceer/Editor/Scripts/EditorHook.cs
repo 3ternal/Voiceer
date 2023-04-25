@@ -102,9 +102,9 @@ namespace Voiceer
                 playModeState = mode;
 
                 //再生ボタンを押した時であること
-                if (!EditorApplication.isPlayingOrWillChangePlaymode
-                    && EditorApplication.isPlaying)
-                    return;
+                //if (!EditorApplication.isPlayingOrWillChangePlaymode
+                //    && EditorApplication.isPlaying)
+                //    return;
 
                 //SceneView が存在すること
                 if (SceneView.sceneViews.Count == 0)
