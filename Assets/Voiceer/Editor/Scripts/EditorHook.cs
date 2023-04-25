@@ -10,7 +10,7 @@ namespace Voiceer
 {
     public class EditorHook
     {
-        static bool logDebug = false;
+        static bool logDebug = true;
 
         private const string yuiSourcePath = "Packages/com.negipoyoc.voiceer/Voiceer/ScriptableObjects/MusubimeYui.asset";
         private const string voiceSelectorSourcePath = "Packages/com.negipoyoc.voiceer/Voiceer/ScriptableObjects/VoicePresetSelector.asset";
@@ -19,6 +19,9 @@ namespace Voiceer
         private readonly static string voiceSelectorTargetPath = pluginsPath + "/VoicePresetSelector.asset";
 
         static float timeOfLastError;
+        static float timeOfExitPlayMode;
+
+        static PlayModeStateChange playModeState;
 
         [InitializeOnLoadMethod]
         private static void CreateVoicePresetSelector()
@@ -82,13 +85,19 @@ namespace Voiceer
         [InitializeOnLoadMethod]
         private static void InitializeEditorHookMethods()
         {
-            Application.logMessageReceived += ReceiveLogMessage;
+            if (logDebug)
+                Debug.Log("InitializeEditorHookMethods\n");
 
             //PlayModeが変わった時
             //シーン再生を開始した時
             //シーン再生を止めた時
             EditorApplication.playModeStateChanged += (mode) =>
             {
+                if (logDebug)
+                    Debug.Log("New play mode state: " + mode + "\n");
+
+                playModeState = mode;
+
                 //再生ボタンを押した時であること
                 if (!EditorApplication.isPlayingOrWillChangePlaymode
                     && EditorApplication.isPlaying)
@@ -103,10 +112,12 @@ namespace Voiceer
                     //Playモードに入れた時
                     case PlayModeStateChange.EnteredPlayMode:
                         SoundPlayer.PlaySound(Hook.OnEnteredPlayMode);
+                        OnEnterPlayMode();
                         break;
                     //Playモードを終了した時
                     case PlayModeStateChange.EnteredEditMode:
                         SoundPlayer.PlaySound(Hook.OnExitingPlayMode);
+                        OnExitPlayMode();
                         break;
                 }
 
@@ -127,6 +138,28 @@ namespace Voiceer
 
             ///シーンを保存する時
             EditorSceneManager.sceneSaved += (scene) => { SoundPlayer.PlaySound(Hook.OnSave); };
+        }
+
+        static void OnEnterPlayMode()
+        {
+            if (logDebug)
+                Debug.Log("On enter play mode\nTime: " + Time.realtimeSinceStartup + "\n");
+
+            //see this bug: https://issuetracker.unity3d.com/issues/application-dot-logmessagereceived-callbacks-are-cleared-when-exiting-play-mode
+            Application.logMessageReceived -= ReceiveLogMessage;
+            Application.logMessageReceived += ReceiveLogMessage;
+        }
+
+        static void OnExitPlayMode()
+        {
+            if (logDebug)
+                Debug.Log("On exit play mode\nTime: " + Time.realtimeSinceStartup + "\n");
+
+            timeOfExitPlayMode = Time.realtimeSinceStartup;
+
+            //see this bug: https://issuetracker.unity3d.com/issues/application-dot-logmessagereceived-callbacks-are-cleared-when-exiting-play-mode
+            Application.logMessageReceived -= ReceiveLogMessage;
+            Application.logMessageReceived += ReceiveLogMessage;
         }
 
         /// <summary>
@@ -212,9 +245,27 @@ namespace Voiceer
         {
             if (type == LogType.Error || type == LogType.Exception || type == LogType.Assert)
             {
-                if (!Mathf.Approximately(timeOfLastError, Time.realtimeSinceStartup))
+                if (logDebug)
                 {
-                    SoundPlayer.PlaySound(Hook.OnError);
+                    Debug.Log("Received an error. Type: " + type + "\n" +
+                        "Real time since startup: " + Time.realtimeSinceStartup + "\n" +
+                        "Time of last error: " + timeOfLastError + "\n" +
+                        "Time of exit play mode: " + timeOfExitPlayMode + "\n" +
+                        "Play mode state: " + playModeState + "\n");
+                }
+
+                if (Mathf.Abs(Time.realtimeSinceStartup - timeOfLastError) > 0.1f)
+                {
+                    //we want to skip errors that occur on exiting play mode, because those usually aren't real errors
+                    if (Time.realtimeSinceStartup - timeOfExitPlayMode > 1f && playModeState == PlayModeStateChange.EnteredEditMode)
+                    {
+                        SoundPlayer.PlaySound(Hook.OnError);
+                    }
+
+                    else if (playModeState == PlayModeStateChange.EnteredPlayMode)
+                    {
+                        SoundPlayer.PlaySound(Hook.OnError);
+                    }
                 }
 
                 timeOfLastError = Time.realtimeSinceStartup;
