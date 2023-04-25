@@ -150,7 +150,12 @@ namespace Voiceer
                 //I think this is sort of like yield return null
                 //the event will be executed only once, and it will happen after the editor refreshes
                 //EditorApplication.delayCall += () => { SoundPlayer.PlaySound(Hook.OnCompileEnd); };
-                SoundPlayer.PlaySound(Hook.OnCompileEnd);
+
+                //only play this on "true" recompile, not on the initial editor load
+                if (SessionState.GetBool("playedWelcomeSound", false))
+                {
+                    SoundPlayer.PlaySound(Hook.OnCompileEnd);
+                }
             }
         }
 
@@ -214,6 +219,19 @@ namespace Voiceer
 
                 timeOfLastError = Time.realtimeSinceStartup;
             }
+        }
+
+        /// <summary>
+        /// Play a sound when you boot up Unity
+        /// </summary>
+        [InitializeOnLoadMethod]
+        static void PlayWelcomeSound()
+        {
+            if (SessionState.GetBool("playedWelcomeSound", false)) return;
+
+            SessionState.SetBool("playedWelcomeSound", true);
+
+            SoundPlayer.PlaySound(Hook.OnLaunchEditor);
         }
     }
 }

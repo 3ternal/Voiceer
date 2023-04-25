@@ -144,6 +144,8 @@ namespace Voiceer
                     return "ビルドターゲットを変更した時 (on build target changed)";
                 case Hook.OnError:
                     return "ビルドターゲットを変更した時 (on error)";
+                case Hook.OnLaunchEditor:
+                    return "On launch Unity editor";
                 default:
                     //上記で未定義なTriggerはそのまま出力
                     return trigger.ToString();
