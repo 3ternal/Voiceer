@@ -23,6 +23,14 @@ namespace Voiceer
 
         static PlayModeStateChange playModeState;
 
+        public static bool IsInPackageFolder()
+        {
+            //do some wizardry to determine if we're in the Package context or if we're in the Voiceer project
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            UnityEditor.PackageManager.PackageInfo packageInfo = UnityEditor.PackageManager.PackageInfo.FindForAssembly(assembly);
+            return packageInfo != null;
+        }
+
         [InitializeOnLoadMethod]
         private static void CreateVoicePresetSelector()
         {
@@ -46,13 +54,8 @@ namespace Voiceer
                 if (logDebug)
                     Debug.Log("Creating a VoicePresetSelector asset\n");
 
-                //do some wizardry to determine if we're in the Package context or if we're in the Voiceer project
-                Assembly assembly = Assembly.GetExecutingAssembly();
-                UnityEditor.PackageManager.PackageInfo packageInfo = UnityEditor.PackageManager.PackageInfo.FindForAssembly(assembly);
-                bool isInPackageFolder = packageInfo != null;
-
                 //if we're in the Package context, we need to do something confusing to get the mutable SOs into the user's Assets folder
-                if (isInPackageFolder)
+                if (IsInPackageFolder())
                 {
                     //make sure the folders exist
                     if (!Directory.Exists("Assets/Plugins"))
@@ -85,6 +88,12 @@ namespace Voiceer
         [InitializeOnLoadMethod]
         private static void InitializeEditorHookMethods()
         {
+            //logDebug should never be true in the user's project
+            if (logDebug && IsInPackageFolder())
+            {
+                logDebug = false;
+            }
+
             if (logDebug)
                 Debug.Log("InitializeEditorHookMethods\n");
 
