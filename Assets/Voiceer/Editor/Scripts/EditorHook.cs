@@ -23,11 +23,15 @@ namespace Voiceer
         [InitializeOnLoadMethod]
         private static void CreateVoicePresetSelector()
         {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+                return;
+
             bool voiceSelectorExists = File.Exists(voiceSelectorTargetPath);
 
             if (logDebug)
             {
-                Debug.Log("Current Voice Preset exists? " + SoundPlayer.CurrentVoicePreset + "\n" +
+                Debug.Log("Attempting to create a VoicePresetSelector, if necessary\n" +
+                    "Current Voice Preset exists? " + SoundPlayer.CurrentVoicePreset + "\n" +
                     "VoicePresetSelector exists? " + voiceSelectorExists + "\n" +
                     "VoicePresetSelector default path: " + voiceSelectorTargetPath + "\n");
             }
@@ -107,6 +111,7 @@ namespace Voiceer
                 }
 
                 //エラーがあるのにPlayしようとした。
+                //register event for if you enter play mode while an error is present
                 EditorApplication.delayCall += () =>
                 {
                     var content = typeof(EditorWindow)
@@ -125,17 +130,27 @@ namespace Voiceer
         }
 
         /// <summary>
-        /// コンパイル終了時
+        /// コンパイル終了時<br></br>
+        /// InitializeOnLoad means that this class will be initialized when Unity loads AND when you recompile.
         /// </summary>
         [InitializeOnLoad]
         public class CompileFinishHook
         {
             static CompileFinishHook()
             {
+                if (logDebug)
+                    Debug.Log("On recompile or reload\nisPlayingOrWillChangePlaymode? " + EditorApplication.isPlayingOrWillChangePlaymode + "\n");
+
                 if (EditorApplication.isPlayingOrWillChangePlaymode)
                     return;
 
-                EditorApplication.delayCall += () => { SoundPlayer.PlaySound(Hook.OnCompileEnd); };
+                if (logDebug)
+                    Debug.Log("Registered CompileFinishHook" + "\n");
+
+                //I think this is sort of like yield return null
+                //the event will be executed only once, and it will happen after the editor refreshes
+                //EditorApplication.delayCall += () => { SoundPlayer.PlaySound(Hook.OnCompileEnd); };
+                SoundPlayer.PlaySound(Hook.OnCompileEnd);
             }
         }
 
