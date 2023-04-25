@@ -10,7 +10,7 @@ namespace Voiceer
 {
     public class EditorHook
     {
-        static bool logDebug = true;
+        static bool logDebug = false;
 
         private const string yuiSourcePath = "Packages/com.negipoyoc.voiceer/Voiceer/ScriptableObjects/MusubimeYui.asset";
         private const string voiceSelectorSourcePath = "Packages/com.negipoyoc.voiceer/Voiceer/ScriptableObjects/VoicePresetSelector.asset";
@@ -88,13 +88,7 @@ namespace Voiceer
         [InitializeOnLoadMethod]
         private static void InitializeEditorHookMethods()
         {
-            //logDebug should never be true in the user's project
-            if (logDebug && IsInPackageFolder())
-            {
-                logDebug = false;
-            }
-
-            if (logDebug)
+             if (logDebug)
                 Debug.Log("InitializeEditorHookMethods\n");
 
             //PlayModeが変わった時

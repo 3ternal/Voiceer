@@ -14,16 +14,6 @@ namespace Voiceer
         public static VoicePreset CurrentVoicePreset => VoiceerEditorUtility.GetStorageSelector()?.CurrentVoicePreset;
         public static bool VoiceSelectorExists => VoiceerEditorUtility.GetStorageSelector() != null;
 
-        [InitializeOnLoadMethod]
-        static void OnLoad()
-        {
-            //logDebug should never be true in the user's project
-            if (logDebug && EditorHook.IsInPackageFolder())
-            {
-                logDebug = false;
-            }
-        }
-
         public static void PlaySound(Hook hook)
         {
             //VoicePresetがあるか
