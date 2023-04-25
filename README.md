@@ -15,9 +15,10 @@ https://twitter.com/CST_negi/status/1214500926326628352
 Developed in cooperation with: [Musubime Yui](https://twitter.com/musubimeyui)
 
 ## Installation Instructions
+1. Download the repo.
 1. In Unity, navigate to the Package Manager.
 2. Click the plus button in the top-left corner.
-3. Click "add package from git URL".
+3. Click "[add package from disk](https://docs.unity3d.com/Manual/upm-ui-local.html)" and select the "package.json" file.
 
 Alternate option: Install from [OpenUPM](https://openupm.com/packages/com.negipoyoc.voiceer/).
 
