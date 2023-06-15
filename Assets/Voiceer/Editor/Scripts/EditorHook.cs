@@ -17,6 +17,7 @@ namespace Voiceer
 
         private const string pluginsPath = "Assets/Plugins/Voiceer";
         private readonly static string voiceSelectorTargetPath = pluginsPath + "/VoicePresetSelector.asset";
+        private readonly static string yuiTargetPath = pluginsPath + "/MusubimeYui.asset";
 
         static float timeOfLastError;
         static float timeOfExitPlayMode;
@@ -81,6 +82,8 @@ namespace Voiceer
 
                     //we were originally going to copy the yui asset to the player's Plugins folder, but I guess there's no need
                     //the only asset that really needs to be mutable is the VoicePresetSelector
+
+                    success = AssetDatabase.CopyAsset(yuiSourcePath, yuiTargetPath);
                 }
             }
         }
