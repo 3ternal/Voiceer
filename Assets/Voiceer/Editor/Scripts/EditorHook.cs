@@ -17,7 +17,7 @@ namespace Voiceer
 
         private const string pluginsPath = "Assets/Plugins/Voiceer";
         private readonly static string voiceSelectorTargetPath = pluginsPath + "/VoicePresetSelector.asset";
-        private readonly static string yuiTargetPath = pluginsPath + "/MusubimeYui.asset";
+        private readonly static string yuiTargetPath = pluginsPath + "/Voices/MusubimeYui.asset";
 
         static float timeOfLastError;
         static float timeOfExitPlayMode;
