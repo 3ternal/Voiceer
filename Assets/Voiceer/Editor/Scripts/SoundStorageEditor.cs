@@ -54,11 +54,33 @@ namespace Voiceer
                         }
 
                         EditorGUILayout.BeginHorizontal();
+
+                        //add a label for each hook
                         EditorGUILayout.LabelField(VoiceerEditorUtility.GetDescriptionLabel(trigger),
                             VoiceerEditorUtility.Bold);
 
-                        var clips = _loadedPreset.GetVoiceSet(trigger).voiceClips;
+                        //get the current clips
+                        List<AudioClip> clips = _loadedPreset.GetVoiceSet(trigger).voiceClips;
 
+                        //remove any empty clips that are sandwiched between valid clips (could happen if you delete one from the middle of the list)
+                        bool foundAnyClip = false;
+                        for (int i = clips.Count - 1; i >= 0; i--)
+                        {
+                            if (clips[i])
+                            {
+                                foundAnyClip = true;
+                            }
+                            else
+                            {
+                                if (foundAnyClip)
+                                {
+                                    foundAnyClip = false;
+                                    clips.RemoveAt(i);
+                                }
+                            }
+                        }
+
+                        //add the minus button
                         if (_loadedPreset.GetVoiceSet(trigger).voiceClips.Count != 0)
                         {
                             if (GUILayout.Button("-", GUILayout.Width(30)))
@@ -67,6 +89,7 @@ namespace Voiceer
                             }
                         }
 
+                        //add the plus button
                         if (GUILayout.Button("+", GUILayout.Width(30)))
                         {
                             clips.Add(null);

@@ -17,9 +17,11 @@ MonoBehaviour:
     sound:
       voiceClips:
       - {fileID: 8300000, guid: 3f9f3222ceba6df41888739ad936344d, type: 3}
-      - {fileID: 8300000, guid: 59f123fa6b293724db0e9a52d5915258, type: 3}
       - {fileID: 8300000, guid: e26faa569f044f84288c8939d8d4148d, type: 3}
+      - {fileID: 8300000, guid: 59f123fa6b293724db0e9a52d5915258, type: 3}
       - {fileID: 8300000, guid: 44bbbc2603dd44041ad1ff9d934d8d16, type: 3}
+      - {fileID: 0}
+      - {fileID: 8300000, guid: 2c4a17fa0acc8df48a6d92bb752a0b51, type: 3}
   - trigger: 1
     sound:
       voiceClips:
