@@ -77,7 +77,7 @@ You will return to Preset Selection Mode, and the editing window will be reset.
 * .wav files are recommended.
 
 # Operating Environment
-Confirmed: Unity 2018-2021
+Confirmed: Unity 2018-2022
 
 Later versions are expected to work as well.
 
