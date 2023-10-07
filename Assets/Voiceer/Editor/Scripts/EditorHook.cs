@@ -302,7 +302,7 @@ namespace Voiceer
 
             SessionState.SetBool("playedWelcomeSound", true);
 
-            SoundPlayer.PlaySound(Hook.OnLaunchEditor);
+            SoundPlayer.PlaySound(Hook.OnLaunchEditor, forceDefaultVolume: true);
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Voiceer
         public static VoicePreset CurrentVoicePreset => VoiceerEditorUtility.GetStorageSelector()?.CurrentVoicePreset;
         public static bool VoiceSelectorExists => VoiceerEditorUtility.GetStorageSelector() != null;
 
-        public static void PlaySound(Hook hook)
+        public static void PlaySound(Hook hook, bool forceDefaultVolume = false)
         {
             //VoicePresetがあるか
             if (CurrentVoicePreset == null)
@@ -39,7 +39,7 @@ namespace Voiceer
                 Debug.Log("Attempting to play a sound for " + hook + "\nClip name: " + clip.name + "\n");
 
             //ボリューム調整が有効か
-            if(VoicePresetSelectorEditor.isVolumeControlEnabled)
+            if (VoicePresetSelectorEditor.isVolumeControlEnabled && !forceDefaultVolume)
             {
                 PlaySoundClipExperimental(clip, VoicePresetSelectorEditor.volume);
             }
